@@ -15,10 +15,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers(int mod, List<Integer> taskIdList, int topNum) {
-        return UserDao.getAllUsers().stream()
-                .filter(user -> taskIdList.contains(user.getId() % mod) && user.getStatus() == 0)
-                .limit(topNum)
-                .collect(Collectors.toList());
+        List<User> allUsers = UserDao.getAllUsers();
+        log.info("用户总人数：{}", allUsers.size());
+
+        List<User> result = new ArrayList<>(allUsers.size());
+        try{
+            for (User user : allUsers) {
+                if(taskIdList.contains(user.getId() % mod) && user.getStatus() == 0){
+                    result.add(user);
+                }
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+        /*Stream<User> userStream = allUsers.stream()
+                .filter(user -> taskIdList.contains(user.getId() % mod) && user.getStatus() == 0);
+        Stream<User> limit = userStream.limit(topNum);
+        return limit.collect(Collectors.toList());*/
+
+        return result.stream().limit(topNum).collect(Collectors.toList());
     }
 
     @Override
@@ -48,7 +64,7 @@ public class UserServiceImpl implements UserService {
          */
         private static List<User> getAllUsers() {
             if (null == users) {
-                users = new ArrayList<>(10);
+                users = new ArrayList<>(60);
                 users.add(new User(1, "LiLi", 43, 0));
                 users.add(new User(2, "WangYun", 54, 0));
                 users.add(new User(3, "LiuSiSi", 89, 0));
@@ -109,17 +125,6 @@ public class UserServiceImpl implements UserService {
                 users.add(new User(58, "WangBin", 85, 0));
                 users.add(new User(59, "ZhaoJun", 36, 0));
                 users.add(new User(60, "LengXuCheng", 98, 0));
-
-                /*users.add(new User("c54c8ab16131469b8362ce70a52a626f", "LiLi", 1, 0));
-                users.add(new User("6137679865fc4f45a63c7d14dae2bbcd", "WangYun", 2, 0));
-                users.add(new User("b794a7d8b105420cbb80aacf18dec7fd", "LiuSiSi", 3, 0));
-                users.add(new User("d38290bf96734955b0e51696da80739b", "ZhangJia", 4, 0));
-                users.add(new User("ff1648f08739460a83a798b008a9e36d", "ChenXiao", 5, 0));
-                users.add(new User("f04aa89f79b049ffa7399e646bd6e974", "WangHai", 6, 0));
-                users.add(new User("62a29162b732400ebacdd24e843ac99c", "FengNian", 7, 0));
-                users.add(new User("2fcc25a437aa4dd0b035068c771a840b", "XiaoXiao", 8, 0));
-                users.add(new User("f707409a65ff47b585c82e0692ea0f60", "YingMo", 9, 0));
-                users.add(new User("34c3ecd25c7945d190005b6736156257", "KaEr", 10, 0));*/
             }
             return users;
         }

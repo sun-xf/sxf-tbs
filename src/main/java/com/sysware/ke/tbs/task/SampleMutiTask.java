@@ -26,17 +26,17 @@ public class SampleMutiTask implements IScheduleTaskDealMulti<User> {
     public List<User> selectTasks(String taskParameter, String ownSign, int taskItemNum,
                                   List<TaskItemDefine> taskItemList, int eachFetchDataNum) {
 
-        /*List<Integer> taskItemIds = taskItemList.stream()
+        List<Integer> taskItemIds = taskItemList.stream()
                 .map(TaskItemDefine::getTaskItemId)
                 .map(Integer::valueOf)
                 .collect(Collectors.toList());
-        List<User> users = userService.getUsers(taskItemNum, taskItemIds, eachFetchDataNum);*/
+        List<User> users = userService.getUsers(taskItemNum, taskItemIds, eachFetchDataNum);
 
-        List<String> taskItemIds = taskItemList.stream()
+        /*List<String> taskItemIds = taskItemList.stream()
                 .map(TaskItemDefine::getTaskItemId)
                 .map(String::valueOf)
                 .collect(Collectors.toList());
-        List<User> users = userService.getUserList(taskItemNum, taskItemIds, eachFetchDataNum);
+        List<User> users = userService.getUserList(taskItemNum, taskItemIds, eachFetchDataNum);*/
 
         log.info("获取到{}条待处理的用户", users.size());
         return users;
@@ -50,7 +50,6 @@ public class SampleMutiTask implements IScheduleTaskDealMulti<User> {
                 log.info("开始处理用户：{}", task);
                 task.setAge(task.getAge() + 1);
                 userService.update(task);
-
             }
             return true;
         } catch (Exception e) {
